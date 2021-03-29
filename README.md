@@ -2,7 +2,7 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This plugin allows you to deliver minified HTML to visitors.  
+This plugin delivers minified HTML and minified inline JavaScript to visitors.  
 In tests this results in up to 50% smaller contents, with enabled compression up to 30%.  
 You can track the compression in Devtools by viewing the header `X-Tinect-Html-Compressor`.
 
