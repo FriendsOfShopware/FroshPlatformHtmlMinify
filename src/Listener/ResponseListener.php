@@ -67,7 +67,7 @@ class ResponseListener
     }
 
     private function minifyHtml(string &$content): void {
-        $search = array(
+        $search = [
             '/(\n|^)(\x20+|\t)/',
             '/(\n|^)\/\/(.*?)(\n|$)/',
             '/\n/',
@@ -75,9 +75,9 @@ class ResponseListener
             '/(\x20+|\t)/', # Delete multispace (Without \n)
             '/\>\s+\</', # strip whitespaces between tags
             '/(\"|\')\s+\>/', # strip whitespaces between quotation ("') and end tags
-            '/=\s+(\"|\')/'); # strip whitespaces between = "'
+            '/=\s+(\"|\')/']; # strip whitespaces between = "'
 
-        $replace = array(
+        $replace = [
             "\n",
             "\n",
             " ",
@@ -85,9 +85,9 @@ class ResponseListener
             " ",
             "><",
             "$1>",
-            "=$1");
+            "=$1"];
 
-        $content = preg_replace($search,$replace,$content);
+        $content = trim(preg_replace($search, $replace, $content));
     }
 
     private function getCombinedInlineScripts(string &$content): string
