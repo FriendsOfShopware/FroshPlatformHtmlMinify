@@ -1,0 +1,21 @@
+{
+  "name": "tinect/platform-html-minify",
+  "description": "HTML Minify plugin",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "TinectPlatformHtmlMinify\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "TinectPlatformHtmlMinify\\TinectPlatformHtmlMinify",
+    "label": {
+      "de-DE": "HTML Minify plugin by tinect",
+      "en-GB": "HTML Minify plugin by tinect"
+    }
+  },
+  "require": {
+    "mrclay/jsmin-php": "^2.4"
+  }
+}
