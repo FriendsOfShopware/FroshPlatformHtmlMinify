@@ -10,7 +10,8 @@ use JSMin\JSMin;
 
 class ResponseListener
 {
-    private $javascriptPlateholder = '##SCRIPTPOSITION##';
+    private $javascriptPlaceholder = '##SCRIPTPOSITION##';
+    private $spacePlaceholder = '##SPACE##';
 
     /**
      * @param ResponseEvent $event
@@ -50,7 +51,7 @@ class ResponseListener
         $this->minifyJavascript($javascripts);
         $this->minifyHtml($content);
 
-        $content = str_replace($this->javascriptPlateholder, '<script>' . $javascripts . '</script>', $content);
+        $content = str_replace($this->javascriptPlaceholder, '<script>' . $javascripts . '</script>', $content);
 
         $lengthContent = mb_strlen($content, 'utf8');
         $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
@@ -73,6 +74,7 @@ class ResponseListener
             '/\n/',
             '/\<\!--.*?-->/',
             '/(\x20+|\t)/', # Delete multispace (Without \n)
+            '/span\>\s+\</', # keep whitespace at span tags
             '/\>\s+\</', # strip whitespaces between tags
             '/(\"|\')\s+\>/', # strip whitespaces between quotation ("') and end tags
             '/=\s+(\"|\')/']; # strip whitespaces between = "'
@@ -83,18 +85,20 @@ class ResponseListener
             " ",
             "",
             " ",
+            'span>' . $this->spacePlaceholder . '<',
             "><",
             "$1>",
             "=$1"];
 
         $content = trim(preg_replace($search, $replace, $content));
+        $content = preg_replace('/' . $this->spacePlaceholder . '/', ' ', $content);
     }
 
     private function getCombinedInlineScripts(string &$content): string
     {
         $scriptContents = '';
         $index = 0;
-        $placeholder = $this->javascriptPlateholder;
+        $placeholder = $this->javascriptPlaceholder;
         if (strpos($content, '</script>') !== false) {
             $content = preg_replace_callback('#<script>(.*?)<\/script>#s', static function ($matches) use (&$scriptContents, &$index, $placeholder) {
                 $index++;
