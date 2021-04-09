@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace TinectPlatformHtmlMinify;
+namespace Frosh\HtmlMinify;
 
 use Composer\Autoload\ClassLoader;
 use Shopware\Core\Framework\Plugin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class TinectPlatformHtmlMinify extends Plugin
+class FroshPlatformHtmlMinify extends Plugin
 {
     public function build(ContainerBuilder $container): void
     {

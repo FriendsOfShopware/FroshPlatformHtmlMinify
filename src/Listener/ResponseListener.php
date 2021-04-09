@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace TinectPlatformHtmlMinify\Listener;
+namespace Frosh\HtmlMinify\Listener;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -57,7 +57,7 @@ class ResponseListener
         $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
         $timeTook = (int) ((microtime(true) - $start) * 1000);
 
-        $response->headers->add(['X-Tinect-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook. 'ms']);
+        $response->headers->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook. 'ms']);
 
         $response->setContent($content);
     }

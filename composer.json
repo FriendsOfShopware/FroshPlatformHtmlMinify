@@ -1,21 +1,47 @@
 {
   "name": "tinect/platform-html-minify",
-  "description": "HTML Minify plugin",
+  "keywords": [
+    "shopware",
+    "backend",
+    "html",
+    "minify"
+  ],
+  "description": "This plugin delivers minified HTML and minified inline JavaScript to visitors.",
+  "version": "1.0.0",
   "type": "shopware-platform-plugin",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "TinectPlatformHtmlMinify\\": "src/"
+  "license": "mit",
+  "authors": [
+    {
+      "name": "FriendsOfShopware",
+      "homepage": "https://friendsofshopware.de"
     }
+  ],
+  "require": {
+    "mrclay/jsmin-php": "^2.4",
+    "shopware/core": "6.*"
   },
   "extra": {
-    "shopware-plugin-class": "TinectPlatformHtmlMinify\\TinectPlatformHtmlMinify",
+    "shopware-plugin-class": "Frosh\\HtmlMinify\\FroshPlatformHtmlMinify",
     "label": {
-      "de-DE": "HTML Minify plugin by tinect",
-      "en-GB": "HTML Minify plugin by tinect"
+      "de-DE": "HTML Minify plugin",
+      "en-GB": "HTML Minify plugin"
+    },
+    "description": {
+      "de-DE": "Verkleiner die Seite, die der Kunde herunterladen muss. In den meisten Fällen können 30% komprimierte Dateigröße eingespart werden.",
+      "en-GB": "Minify the page the customer needs to download. In most cases, it can save 30% compressed file size."
+    },
+    "manufacturerLink": {
+      "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify",
+      "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify"
+    },
+    "supportLink": {
+      "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify/issues",
+      "en-GB": "https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify/issues"
     }
   },
-  "require": {
-    "mrclay/jsmin-php": "^2.4"
+  "autoload": {
+    "psr-4": {
+      "Frosh\\HtmlMinify\\": "src/"
+    }
   }
 }
