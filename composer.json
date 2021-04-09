@@ -22,6 +22,7 @@
   },
   "extra": {
     "shopware-plugin-class": "Frosh\\HtmlMinify\\FroshPlatformHtmlMinify",
+    "plugin-icon": "src/Resources/config/plugin.png",
     "label": {
       "de-DE": "HTML Minify plugin",
       "en-GB": "HTML Minify plugin"
