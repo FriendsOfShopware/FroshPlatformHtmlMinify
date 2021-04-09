@@ -32,8 +32,8 @@ jobs:
 
             -   name: BuildZip
                 run: |
-                php frosh-plugin-upload.phar ext:zip ${PLUGIN_NAME}
-                mv ${PLUGIN_NAME}*.zip ${PLUGIN_NAME}.zip
+                    php frosh-plugin-upload.phar ext:zip ${PLUGIN_NAME}
+                    mv ${PLUGIN_NAME}*.zip ${PLUGIN_NAME}.zip
 
             -   name: Upload Artefact
                 uses: actions/upload-artifact@v2
