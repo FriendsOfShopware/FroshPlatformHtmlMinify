@@ -27,8 +27,8 @@
       "en-GB": "HTML Minify plugin"
     },
     "description": {
-      "de-DE": "Verkleiner die Seite, die der Kunde herunterladen muss. In den meisten Fällen können 30% komprimierte Dateigröße eingespart werden.",
-      "en-GB": "Minify the page the customer needs to download. In most cases, it can save 30% compressed file size."
+      "de-DE": "Liefere minimierte HTML-Seiten aus. Zusätzlich kombiniert und minimiert dieses Plugin die JavaScript-Tags im HTML. In den meisten Fällen können Einsparungen von 30 % gemacht werden.",
+      "en-GB": "Deliver minified HTML pages. In addition, this plugin combines and minimizes the JavaScript tags in the HTML. In most cases, savings of 30% can be made."
     },
     "manufacturerLink": {
       "de-DE": "https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify",
