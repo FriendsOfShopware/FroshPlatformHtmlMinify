@@ -6,4 +6,4 @@ Dieses Plugin wird von [@FriendsOfShopware](https://store.shopware.com/friends-o
 entwickelt.  
 Maintainer dieses Plugins ist: [Sebastian König (tinect)](https://github.com/tinect)
 
-Bei Fragen / Fehlern bitte ein [Github Issue](https://github.com/FriendsOfShopware/store/issues/new) erstellen
+Bei Fragen / Fehlern bitte ein [Github Issue](https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify/issues/new) erstellen

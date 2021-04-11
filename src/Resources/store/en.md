@@ -5,4 +5,4 @@ You can track the compression in Devtools by viewing the header `X-Html-Compress
 This plugin is part of [@FriendsOfShopware](https://store.shopware.com/en/friends-of-shopware.html).  
 Maintainer from the plugin is: [Sebastian König (tinect)](https://github.com/tinect)
 
-For questions or bugs please create a [Github Issue](https://github.com/FriendsOfShopware/store/issues/new)
+For questions or bugs please create a [Github Issue](https://github.com/FriendsOfShopware/FroshPlatformHtmlMinify/issues/new)
