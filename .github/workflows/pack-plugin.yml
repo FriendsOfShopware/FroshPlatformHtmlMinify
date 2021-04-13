@@ -25,7 +25,7 @@ jobs:
                 run: |
                     ln -s "$(pwd)" "/plugins/${PLUGINNAME}"
                     start-mysql
-                    composer install --no-suggest
+                    composer install -d "/plugins/${PLUGINNAME}" --no-dev --no-interaction --no-suggest --optimize-autoloader --ignore-platform-reqs
                     pack-plugin "${PLUGIN_NAME}"
 
             -   name: Upload Artefact
