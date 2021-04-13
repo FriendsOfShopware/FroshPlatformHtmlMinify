@@ -10,7 +10,6 @@ env:
     PLUGIN_NAME: FroshPlatformHtmlMinify
     ACCOUNT_USER: ${{ secrets.ACCOUNT_USER }}
     ACCOUNT_PASSWORD: ${{ secrets.ACCOUNT_PASSWORD }}
-    PLUGIN_UPLOADER_VERSION: 0.3.11
 
 jobs:
     pack:
@@ -22,10 +21,11 @@ jobs:
                 with:
                     path: ${{ env.PLUGIN_NAME }}
 
-            -   name: BuildZip
+            -   name: Build & create zip
                 run: |
-                    /opt/bin/plugin-uploader ext:zip ${PLUGIN_NAME}
-                    mv ${PLUGIN_NAME}*.zip ${PLUGIN_NAME}.zip
+                    cp -r "./${PLUGIN_NAME}" "/plugins/${PLUGIN_NAME}"
+                    start-mysql
+                    pack-plugin "${PLUGIN_NAME}"
 
             -   name: Upload Artefact
                 uses: actions/upload-artifact@v2
@@ -34,13 +34,13 @@ jobs:
                     path: ${{ env.PLUGIN_NAME }}.zip
 
             -   name: Validate Zip
-                run: /opt/bin/plugin-uploader ext:validate $(pwd)/${PLUGIN_NAME}.zip
+                run: plugin-uploader ext:validate $(pwd)/${PLUGIN_NAME}.zip
 
             -   name: Update store informations
-                run: /opt/bin/plugin-uploader ext:update $(pwd)/${PLUGIN_NAME}/
+                run: plugin-uploader ext:update $(pwd)/${PLUGIN_NAME}/
 
             -   name: Upload to store
                 if: startsWith(github.ref, 'refs/tags/')
-                run: /opt/bin/plugin-uploader ext:upload $(pwd)/${PLUGIN_NAME}.zip --createRelease
+                run: plugin-uploader ext:upload $(pwd)/${PLUGIN_NAME}.zip --createRelease
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
