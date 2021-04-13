@@ -23,8 +23,9 @@ jobs:
 
             -   name: Build & create zip
                 run: |
-                    cp -r "./${PLUGIN_NAME}" "/plugins/${PLUGIN_NAME}"
+                    ln -s "$(pwd)" "/plugins/${PLUGINNAME}"
                     start-mysql
+                    composer install --no-suggest
                     pack-plugin "${PLUGIN_NAME}"
 
             -   name: Upload Artefact
