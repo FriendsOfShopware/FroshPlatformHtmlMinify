@@ -74,24 +74,29 @@ class ResponseListener
             '/\n/',
             '/\<\!--.*?-->/',
             '/(\x20+|\t)/', # Delete multispace (Without \n)
-            '/span\>\s+\</', # keep whitespace at span tags
+            '/span\>\s+/', # keep whitespace after span tags
+            '/\s+\<span/', # keep whitespace before span tags
             '/\>\s+\</', # strip whitespaces between tags
             '/(\"|\')\s+\>/', # strip whitespaces between quotation ("') and end tags
-            '/=\s+(\"|\')/']; # strip whitespaces between = "'
+            '/=\s+(\"|\')/', # strip whitespaces between = "'
+            '/' . $this->spacePlaceholder . '/', # replace the spacePlaceholder at the end
+        ];
 
         $replace = [
             "\n",
             "\n",
-            " ",
-            "",
-            " ",
-            'span>' . $this->spacePlaceholder . '<',
-            "><",
-            "$1>",
-            "=$1"];
+            ' ',
+            '',
+            ' ',
+            'span>' . $this->spacePlaceholder,
+            $this->spacePlaceholder . '<span',
+            '><',
+            '$1>',
+            '=$1',
+            ' ',
+        ];
 
         $content = trim(preg_replace($search, $replace, $content));
-        $content = preg_replace('/' . $this->spacePlaceholder . '/', ' ', $content);
     }
 
     private function getCombinedInlineScripts(string &$content): string
