@@ -4,6 +4,7 @@ namespace Frosh\HtmlMinify\Listener;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use JSMin\JSMin;
@@ -18,8 +19,6 @@ class ResponseListener
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
-        $start = microtime(true);
-
         if (!$event->isMasterRequest()) {
             return;
         }
@@ -43,6 +42,12 @@ class ResponseListener
             $classLoader->register(false);
         }
 
+        $this->minify($response);
+    }
+
+    private function minify(Response $response): void
+    {
+        $startTime = microtime(true);
         $content = $response->getContent();
         $lengthInitialContent = mb_strlen($content, 'utf8');
 
@@ -50,23 +55,19 @@ class ResponseListener
 
         $javascripts = $this->extractCombinedInlineScripts($content);
 
-        $this->minifyJavascript($javascripts);
         $this->minifyHtml($content);
 
+        //add the minified javascript after minifying html
         $content = str_replace($this->javascriptPlaceholder, '<script>' . $javascripts . '</script>', $content);
 
-        $lengthContent = mb_strlen($content, 'utf8');
-        $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
-        $timeTook = (int) ((microtime(true) - $start) * 1000);
-
-        $response->headers->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook. 'ms']);
+        $this->assignCompressionHeader($response, $content, $lengthInitialContent, $startTime);
 
         $response->setContent($content);
     }
 
-    private function minifyJavascript(string &$content): void {
+    private function minifyJavascript(string $content): string {
         $jsMin = new JSMin($content);
-        $content = $jsMin->min();
+        return $jsMin->min();
     }
 
     private function minifyHtml(string &$content): void {
@@ -118,7 +119,7 @@ class ResponseListener
             }, $content);
         }
 
-        return $scriptContents;
+        return $this->minifyJavascript($scriptContents);
     }
 
     private function minifySourceTypes(&$content): void
@@ -129,5 +130,14 @@ class ResponseListener
         ];
         $replace = '';
         $content = preg_replace($search, $replace, $content);
+    }
+
+    private function assignCompressionHeader(Response $response, string $content, int $lengthInitialContent, float $startTime): void
+    {
+        $lengthContent = mb_strlen($content, 'utf8');
+        $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
+        $timeTook = (int)((microtime(true) - $startTime) * 1000);
+
+        $response->headers->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
     }
 }
