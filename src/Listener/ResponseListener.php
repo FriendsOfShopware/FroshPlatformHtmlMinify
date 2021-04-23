@@ -46,7 +46,9 @@ class ResponseListener
         $content = $response->getContent();
         $lengthInitialContent = mb_strlen($content, 'utf8');
 
-        $javascripts = $this->getCombinedInlineScripts($content);
+        $this->minifySourceTypes($content);
+
+        $javascripts = $this->extractCombinedInlineScripts($content);
 
         $this->minifyJavascript($javascripts);
         $this->minifyHtml($content);
@@ -76,6 +78,8 @@ class ResponseListener
             '/(\x20+|\t)/', # Delete multispace (Without \n)
             '/span\>\s+/', # keep whitespace after span tags
             '/\s+\<span/', # keep whitespace before span tags
+            '/button\>\s+/', # keep whitespace after span tags
+            '/\s+\<button/', # keep whitespace before span tags
             '/\>\s+\</', # strip whitespaces between tags
             '/(\"|\')\s+\>/', # strip whitespaces between quotation ("') and end tags
             '/=\s+(\"|\')/', # strip whitespaces between = "'
@@ -90,6 +94,8 @@ class ResponseListener
             ' ',
             'span>' . $this->spacePlaceholder,
             $this->spacePlaceholder . '<span',
+            'button>' . $this->spacePlaceholder,
+            $this->spacePlaceholder . '<button',
             '><',
             '$1>',
             '=$1',
@@ -99,7 +105,7 @@ class ResponseListener
         $content = trim(preg_replace($search, $replace, $content));
     }
 
-    private function getCombinedInlineScripts(string &$content): string
+    private function extractCombinedInlineScripts(string &$content): string
     {
         $scriptContents = '';
         $index = 0;
@@ -113,5 +119,15 @@ class ResponseListener
         }
 
         return $scriptContents;
+    }
+
+    private function minifySourceTypes(&$content): void
+    {
+        $search = [
+            '/ type=["\']text\/javascript["\']/',
+            '/ type=["\']text\/css["\']/',
+        ];
+        $replace = '';
+        $content = preg_replace($search, $replace, $content);
     }
 }
