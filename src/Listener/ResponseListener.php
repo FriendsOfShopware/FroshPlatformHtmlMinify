@@ -112,9 +112,15 @@ class ResponseListener
         $index = 0;
         $placeholder = $this->javascriptPlaceholder;
         if (strpos($content, '</script>') !== false) {
-            $content = preg_replace_callback('#<script>(.*?)<\/script>#s', static function ($matches) use (&$scriptContents, &$index, $placeholder) {
+            $content = preg_replace_callback('#<script>(.*?)<\/script>#s', function ($matches) use (&$scriptContents, &$index, $placeholder) {
                 $index++;
-                $scriptContents .= $matches[1] . PHP_EOL;
+                $content = trim($matches[1]);
+
+                if (!$this->str_ends_with($content, ';')) {
+                    $content .= ';';
+                }
+
+                $scriptContents .= $content . PHP_EOL;
                 return $index === 1 ? $placeholder : '';
             }, $content);
         }
@@ -139,5 +145,9 @@ class ResponseListener
         $timeTook = (int)((microtime(true) - $startTime) * 1000);
 
         $response->headers->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
+    }
+
+    private function str_ends_with(string $haystack, string $needle): bool {
+        return $needle === '' || substr_compare($haystack, $needle, -strlen($needle)) === 0;
     }
 }
