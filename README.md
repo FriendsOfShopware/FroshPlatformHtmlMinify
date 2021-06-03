@@ -8,7 +8,29 @@ You can track the compression in Devtools by viewing the header `X-Html-Compress
 
 ## Install
 
-Download the plugin from the release page and enable it in shopware.
+- Install via Shopware Store
+- Install via manual download
+- Install via composer
+
+## Install via manual download
+
+Download the plugin from the release page, copy it to `custom/static-plugins/` and enable it in Shopware.
+
+```bash
+composer config repositories.FroshPlatformHtmlMinify vcs git@github.com:FriendsOfShopware/FroshPlatformHtmlMinify.git
+composer require frosh/platform-html-minify
+bin/console plugin:refresh
+bin/console plugin:install --activate FroshPlatformHtmlMinify
+```
+
+## Install via composer
+
+Using the following commands to install via composer:
+
+```bash
+bin/console plugin:refresh
+bin/console plugin:install --activate FroshPlatformHtmlMinify
+```
 
 ## License
 
