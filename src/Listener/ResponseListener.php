@@ -34,15 +34,24 @@ class ResponseListener
             return;
         }
 
+        $this->resetClassLoader();
+
+        $this->minify($response);
+    }
+
+    private function resetClassLoader()
+    {
         $file = __DIR__.'/../../vendor/autoload.php';
+        if (!file_exists($file)) {
+            return;
+        }
+
         $classLoader = require_once $file;
 
         if ($classLoader instanceof ClassLoader) {
             $classLoader->unregister();
             $classLoader->register(false);
         }
-
-        $this->minify($response);
     }
 
     private function minify(Response $response): void
