@@ -14,13 +14,15 @@ class FroshPlatformHtmlMinify extends Plugin
 
         $file = __DIR__.'/../vendor/autoload.php';
 
-        if (is_file($file)) {
-            $classLoader = require_once $file;
+        if (!is_file($file)) {
+            return;
+        }
 
-            if ($classLoader instanceof ClassLoader) {
-                $classLoader->unregister();
-                $classLoader->register(false);
-            }
+        $classLoader = require_once $file;
+
+        if ($classLoader instanceof ClassLoader) {
+            $classLoader->unregister();
+            $classLoader->register(false);
         }
     }
 }
