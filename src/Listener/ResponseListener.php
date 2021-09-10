@@ -86,6 +86,7 @@ class ResponseListener
             '/\n/',
             '/\<\!--.*?-->/',
             '/(\x20+|\t)/', # Delete multispace (Without \n)
+            '/\s+\<label/', # keep whitespace before label tags
             '/span\>\s+/', # keep whitespace after span tags
             '/\s+\<span/', # keep whitespace before span tags
             '/button\>\s+/', # keep whitespace after span tags
@@ -102,6 +103,7 @@ class ResponseListener
             ' ',
             '',
             ' ',
+            $this->spacePlaceholder . '<label',
             'span>' . $this->spacePlaceholder,
             $this->spacePlaceholder . '<span',
             'button>' . $this->spacePlaceholder,
