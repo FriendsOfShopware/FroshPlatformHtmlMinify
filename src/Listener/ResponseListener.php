@@ -30,11 +30,13 @@ class ResponseListener
             return;
         }
 
-        if (strpos($response->headers->get('Content-Type', ''), 'text/html') === false) {
+        if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
             return;
         }
 
-        $this->resetClassLoader();
+        if (strpos($response->headers->get('Content-Type', ''), 'text/html') === false) {
+            return;
+        }
 
         $this->minify($response);
     }
@@ -60,6 +62,10 @@ class ResponseListener
         $content = $response->getContent();
         $lengthInitialContent = mb_strlen($content, 'utf8');
 
+        if ($lengthInitialContent === 0) {
+            return;
+        }
+
         $this->minifySourceTypes($content);
 
         $javascripts = $this->extractCombinedInlineScripts($content);
@@ -75,6 +81,7 @@ class ResponseListener
     }
 
     private function minifyJavascript(string $content): string {
+        $this->resetClassLoader();
         $jsMin = new JSMin($content);
         return $jsMin->min();
     }
