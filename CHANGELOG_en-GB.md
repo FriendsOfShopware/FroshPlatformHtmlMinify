@@ -1,3 +1,7 @@
+# 1.0.2
+
+* Fix: Fix errors caused by empty content
+
 # 1.0.1
 
 * Feat: keep spaces around span tags

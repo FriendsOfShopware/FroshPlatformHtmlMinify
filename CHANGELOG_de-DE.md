@@ -1,3 +1,7 @@
+# 1.0.2
+
+* Fix: Behebe Fehler, der durch einen leeren Inhalt verursacht wurde
+
 # 1.0.1
 
 * Feat: Behalte Leerzeichen um span-Tags
