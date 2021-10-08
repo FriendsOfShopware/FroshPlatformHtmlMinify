@@ -1,3 +1,7 @@
+# 1.0.3
+
+* Feat: Komprimierung wird nur im Produktivmodus ausgeführt
+
 # 1.0.2
 
 * Fix: Behebe Fehler, der durch einen leeren Inhalt verursacht wurde

@@ -1,3 +1,7 @@
+# 1.0.3
+
+* Feat: Compression is only performed in production mode
+ 
 # 1.0.2
 
 * Fix: Fix errors caused by empty content

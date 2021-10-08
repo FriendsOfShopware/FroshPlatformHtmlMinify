@@ -13,12 +13,22 @@ class ResponseListener
 {
     private $javascriptPlaceholder = '##SCRIPTPOSITION##';
     private $spacePlaceholder = '##SPACE##';
+    private string $environment;
+
+    public function __construct(string $environment)
+    {
+        $this->environment = $environment;
+    }
 
     /**
      * @param ResponseEvent $event
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
+        if ($this->environment !== 'prod') {
+            return;
+        }
+
         if (!$event->isMasterRequest()) {
             return;
         }
