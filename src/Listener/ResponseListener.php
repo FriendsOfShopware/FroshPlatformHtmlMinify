@@ -13,7 +13,7 @@ class ResponseListener
 {
     private $javascriptPlaceholder = '##SCRIPTPOSITION##';
     private $spacePlaceholder = '##SPACE##';
-    private string $environment;
+    private $environment;
 
     public function __construct(string $environment)
     {
