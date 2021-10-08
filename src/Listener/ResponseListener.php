@@ -141,10 +141,6 @@ class ResponseListener
         $placeholder = $this->javascriptPlaceholder;
         if (strpos($content, '</script>') !== false) {
             $content = preg_replace_callback('#<script>(.*?)<\/script>#s', function ($matches) use (&$scriptContents, &$index, $placeholder) {
-                if (str_contains($matches[1], 'Sfdump')) {
-                    return $matches[0];
-                }
-
                 $index++;
                 $content = trim($matches[1]);
 
