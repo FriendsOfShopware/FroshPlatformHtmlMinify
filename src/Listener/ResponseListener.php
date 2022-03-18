@@ -3,6 +3,7 @@
 namespace Frosh\HtmlMinify\Listener;
 
 use Composer\Autoload\ClassLoader;
+use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -92,8 +93,7 @@ class ResponseListener
 
     private function minifyJavascript(string $content): string {
         $this->resetClassLoader();
-        $jsMin = new JSMin($content);
-        return $jsMin->min();
+        return (new JSMin($content))->min();
     }
 
     private function minifyHtml(string &$content): void {
@@ -169,6 +169,11 @@ class ResponseListener
     private function assignCompressionHeader(Response $response, string $content, int $lengthInitialContent, float $startTime): void
     {
         $lengthContent = mb_strlen($content, 'utf8');
+
+        if ($lengthContent === 0) {
+            return;
+        }
+
         $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
         $timeTook = (int)((microtime(true) - $startTime) * 1000);
 

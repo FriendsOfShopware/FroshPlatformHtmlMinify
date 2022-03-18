@@ -1,3 +1,7 @@
+# 1.0.4
+
+* Fix: Fix error with 0B result
+
 # 1.0.3
 
 * Feat: Compression is only performed in production mode

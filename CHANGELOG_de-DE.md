@@ -1,3 +1,7 @@
+# 1.0.4
+
+* Fix: Behebe Fehler, der auftritt, wenn das Ergebnis 0B beträgt 
+
 # 1.0.3
 
 * Feat: Komprimierung wird nur im Produktivmodus ausgeführt
