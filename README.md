@@ -8,10 +8,10 @@ You can track the compression in Devtools by viewing the header `X-Html-Compress
 
 ## Download
 
-### Composer
-
-* [packages.friendsofshopware.com](https://packages.friendsofshopware.com/packages/froshplatformhtmlminify)
-* [packagist.org](https://packagist.org/packages/frosh/platform-html-minify)
+### Composer from [packagist.org](https://packagist.org/packages/frosh/platform-html-minify)
+```
+composer require frosh/platform-html-minify
+```
 
 ### Store
 
