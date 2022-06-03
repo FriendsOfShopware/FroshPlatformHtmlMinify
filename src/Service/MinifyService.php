@@ -12,7 +12,7 @@ class MinifyService
 
     private string $spacePlaceholder = '##SPACE##';
 
-    public function minify(string $content, ResponseHeaderBag $headerBag): string
+    public function minify(string $content, ?ResponseHeaderBag $headerBag = null): string
     {
         $startTime = microtime(true);
         $lengthInitialContent = mb_strlen($content, 'utf8');
@@ -132,7 +132,7 @@ class MinifyService
         $content = preg_replace($search, $replace, $content);
     }
 
-    private function assignCompressionHeader(ResponseHeaderBag $headerBag, string $content, int $lengthInitialContent, float $startTime): void
+    private function assignCompressionHeader(?ResponseHeaderBag $headerBag, string $content, int $lengthInitialContent, float $startTime): void
     {
         $lengthContent = mb_strlen($content, 'utf8');
 
@@ -143,7 +143,9 @@ class MinifyService
         $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
         $timeTook = (int) ((microtime(true) - $startTime) * 1000);
 
-        $headerBag->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
+        if ($headerBag) {
+            $headerBag->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
+        }
     }
 
     private function str_ends_with(string $haystack, string $needle): bool
