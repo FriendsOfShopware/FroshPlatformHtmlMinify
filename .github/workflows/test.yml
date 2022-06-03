@@ -27,7 +27,6 @@ jobs:
             -   name: Build & test
                 run: |
                     /usr/bin/shopware-cli extension prepare .
-                    echo "mrclay/jsmin-php: `composer show mrclay/jsmin-php | sed -n '/versions/s/^[^0-9]\+\([^,]\+\).*$/\1/p'`"
                     ln -s "$(pwd)" "/plugins/FroshPlatformHtmlMinify"
                     PROJECT_ROOT=/opt/shopware php -d pcov.enabled=1 -d pcov.directory=/opt/shopware \
                         /opt/shopware/vendor/phpunit/phpunit/phpunit \
