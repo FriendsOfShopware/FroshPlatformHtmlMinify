@@ -12,7 +12,7 @@ class FroshPlatformHtmlMinify extends Plugin
     {
         parent::build($container);
 
-        $file = __DIR__.'/../vendor/autoload.php';
+        $file = __DIR__ . '/../vendor/autoload.php';
 
         if (!is_file($file)) {
             return;

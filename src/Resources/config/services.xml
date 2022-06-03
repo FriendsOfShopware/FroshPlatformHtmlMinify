@@ -7,7 +7,10 @@
     <services>
         <service id="Frosh\HtmlMinify\Listener\ResponseListener">
             <argument>%kernel.environment%</argument>
+            <argument type="service" id="Frosh\HtmlMinify\Service\MinifyService"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
         </service>
+
+        <service id="Frosh\HtmlMinify\Service\MinifyService"/>
     </services>
 </container>

@@ -18,7 +18,7 @@
   ],
   "require": {
     "mrclay/jsmin-php": "^2.4",
-    "shopware/core": "^6.0"
+    "shopware/core": "~6.4.7"
   },
   "extra": {
     "shopware-plugin-class": "Frosh\\HtmlMinify\\FroshPlatformHtmlMinify",
