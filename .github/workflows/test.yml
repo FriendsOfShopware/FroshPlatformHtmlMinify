@@ -26,7 +26,7 @@ jobs:
 
             -   name: Build & test
                 run: |
-                    /usr/bin/shopware-cli extension prepare . --disable-git
+                    /usr/bin/shopware-cli extension prepare .
                     ln -s "$(pwd)" "/plugins/FroshPlatformHtmlMinify"
                     PROJECT_ROOT=/opt/shopware php -d pcov.enabled=1 -d pcov.directory=/opt/shopware \
                         /opt/shopware/vendor/phpunit/phpunit/phpunit \
