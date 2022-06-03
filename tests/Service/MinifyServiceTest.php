@@ -34,7 +34,7 @@ class MinifyServiceTest extends TestCase
         }
 
         $files = glob(__DIR__ . '/MinifyServiceTestFiles/*.source.html');
-        static::assertCount(2, $files);
+        static::assertCount(3, $files);
 
         foreach ($files as $file) {
             $resultFilePath = str_replace('.source.', '.target.', $file);
