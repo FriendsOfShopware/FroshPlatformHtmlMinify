@@ -37,8 +37,6 @@ class MinifyServiceTest extends TestCase
         static::assertCount(3, $files);
 
         foreach ($files as $file) {
-            $startTime = microtime(true);
-
             $resultFilePath = str_replace('.source.', '.target.', $file);
             if (!file_exists($resultFilePath)) {
                 throw new RuntimeException($resultFilePath . ' missing!');
@@ -49,9 +47,6 @@ class MinifyServiceTest extends TestCase
                 $this->minifyService->minify(file_get_contents($file)),
                 'Test failed for ' . $file
             );
-
-            $timeTook = (int) ((microtime(true) - $startTime) * 1000);
-            self::assertLessThanOrEqual(5, $timeTook, 'Minification took too long.');
         }
     }
 }
