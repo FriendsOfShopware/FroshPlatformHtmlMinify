@@ -13,16 +13,18 @@ class MinifyServiceTest extends TestCase
         $this->minifyService = new MinifyService();
     }
 
-    public function testMinify(): void
+    /**
+     * @dataProvider provider
+     */
+    public function testMinify($expectedContent, $content): void
     {
         $headers = new ResponseHeaderBag();
 
-        self::assertSame('sdqlqfqff aadadad', $this->minifyService->minify('sdqlqfqff
-        aadadad', $headers));
+        self::assertSame($expectedContent, $this->minifyService->minify($content, $headers));
 
         self::assertTrue($headers->has('x-html-compressor'));
 
-        preg_match('/(\d+): (\d+)% (\d+)ms/', $headers->get('x-html-compressor'), $headerParts);
+        preg_match('/(\d+): (\d+\d*\.?\d*)% (\d+)ms/', $headers->get('x-html-compressor'), $headerParts);
         self::assertCount(4, $headerParts, 'The x-html-compressor-Header is invalid');
 
         foreach ($headerParts as $key => $part) {
@@ -30,23 +32,35 @@ class MinifyServiceTest extends TestCase
                 continue;
             }
 
+            if ($key === 2) {
+                self::assertSame($part,(string) (float) $part, 'The x-html-compressor-Header doesn\'t contain valid float');
+                continue;
+            }
+
             self::assertSame($part,(string) (int) $part, 'The x-html-compressor-Header doesn\'t contain numbers');
+
         }
+    }
+
+    public function provider(): array
+    {
+        $cases = [];
 
         $files = glob(__DIR__ . '/MinifyServiceTestFiles/*.source.html');
-        static::assertCount(3, $files);
-
         foreach ($files as $file) {
             $resultFilePath = str_replace('.source.', '.target.', $file);
             if (!file_exists($resultFilePath)) {
                 throw new RuntimeException($resultFilePath . ' missing!');
             }
 
-            static::assertStringEqualsFile(
-                $resultFilePath,
-                $this->minifyService->minify(file_get_contents($file)),
-                'Test failed for ' . $file
-            );
+            $cases[] = [
+                file_get_contents($resultFilePath),
+                file_get_contents($file)
+            ];
         }
+
+        self::assertCount(3, $cases);
+
+        return $cases;
     }
 }
