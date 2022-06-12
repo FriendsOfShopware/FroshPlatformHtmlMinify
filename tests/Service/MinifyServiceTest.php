@@ -27,19 +27,10 @@ class MinifyServiceTest extends TestCase
         preg_match('/(\d+): (\d+\d*\.?\d*)% (\d+)ms/', $headers->get('x-html-compressor'), $headerParts);
         self::assertCount(4, $headerParts, 'The x-html-compressor-Header is invalid');
 
-        foreach ($headerParts as $key => $part) {
-            if ($key === 0) {
-                continue;
-            }
+        self::assertSame($headerParts[1],(string) (int) $headerParts[1], 'The x-html-compressor-Header doesn\'t contain valid timestamp');
+        self::assertSame($headerParts[2],(string) (float) $headerParts[2], 'The x-html-compressor-Header doesn\'t contain valid percentage');
+        self::assertSame($headerParts[3],(string) (int) $headerParts[3], 'The x-html-compressor-Header doesn\'t contain valid runtime');
 
-            if ($key === 2) {
-                self::assertSame($part,(string) (float) $part, 'The x-html-compressor-Header doesn\'t contain valid float');
-                continue;
-            }
-
-            self::assertSame($part,(string) (int) $part, 'The x-html-compressor-Header doesn\'t contain numbers');
-
-        }
     }
 
     public function provider(): array
