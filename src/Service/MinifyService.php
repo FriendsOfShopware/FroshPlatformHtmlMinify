@@ -4,6 +4,8 @@ namespace Frosh\HtmlMinify\Service;
 
 use Composer\Autoload\ClassLoader;
 use JSMin\JSMin;
+use Shopware\Core\Framework\Adapter\Cache\CacheCompressor;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class MinifyService
@@ -11,6 +13,13 @@ class MinifyService
     private string $javascriptPlaceholder = '##SCRIPTPOSITION##';
 
     private string $spacePlaceholder = '##SPACE##';
+
+    private AdapterInterface $cache;
+
+    public function __construct(AdapterInterface $cache)
+    {
+        $this->cache = $cache;
+    }
 
     public function minify(string $content, ?ResponseHeaderBag $headerBag = null): string
     {
@@ -119,7 +128,19 @@ class MinifyService
             return $index === 1 ? $placeholder : '';
         }, $content);
 
-        return $this->minifyJavascript($jsContent);
+        $cacheItem = $this->cache->getItem(sha1($jsContent));
+
+        if ($cacheItem->isHit()) {
+            return CacheCompressor::uncompress($cacheItem);
+        }
+
+        $jsContent = $this->minifyJavascript($jsContent);
+
+        $cacheItem = CacheCompressor::compress($cacheItem, $jsContent);
+        $cacheItem->expiresAfter(new \DateInterval('P1D'));
+        $this->cache->save($cacheItem);
+
+        return $jsContent;
     }
 
     private function minifySourceTypes(&$content): void

@@ -11,6 +11,8 @@
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
         </service>
 
-        <service id="Frosh\HtmlMinify\Service\MinifyService"/>
+        <service id="Frosh\HtmlMinify\Service\MinifyService">
+            <argument type="service" id="cache.object"/>
+        </service>
     </services>
 </container>

@@ -41,7 +41,7 @@ class ResponseListener
             return;
         }
 
-        if (strpos($response->headers->get('Content-Type', ''), 'text/html') === false) {
+        if (!str_contains($response->headers->get('Content-Type', ''), 'text/html')) {
             return;
         }
 

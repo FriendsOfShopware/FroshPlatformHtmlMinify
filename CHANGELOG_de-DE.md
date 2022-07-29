@@ -1,3 +1,7 @@
+# 1.0.5
+
+* Perf: Add cache for javascript minification
+
 # 1.0.4
 
 * Fix: Behebe Fehler, der auftritt, wenn das Ergebnis 0B beträgt 
