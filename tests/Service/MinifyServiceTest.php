@@ -2,6 +2,7 @@
 
 use Frosh\HtmlMinify\Service\MinifyService;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class MinifyServiceTest extends TestCase
@@ -10,7 +11,7 @@ class MinifyServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->minifyService = new MinifyService();
+        $this->minifyService = new MinifyService(new ArrayAdapter());
     }
 
     /**
