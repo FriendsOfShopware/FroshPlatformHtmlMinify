@@ -7,7 +7,7 @@
     "minify"
   ],
   "description": "This plugin delivers minified HTML and minified inline JavaScript to visitors.",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "type": "shopware-platform-plugin",
   "license": "mit",
   "authors": [
@@ -17,8 +17,8 @@
     }
   ],
   "require": {
-    "mrclay/jsmin-php": "^2.4",
-    "shopware/core": "~6.4.7"
+    "shopware/core": "~6.5.0",
+    "mrclay/jsmin-php": "^2.4"
   },
   "extra": {
     "shopware-plugin-class": "Frosh\\HtmlMinify\\FroshPlatformHtmlMinify",
@@ -43,6 +43,12 @@
   "autoload": {
     "psr-4": {
       "Frosh\\HtmlMinify\\": "src/"
+    }
+  },
+  "minimum-stability": "RC",
+  "config": {
+    "allow-plugins": {
+      "symfony/runtime": true
     }
   }
 }

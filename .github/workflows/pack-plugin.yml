@@ -1,15 +1,15 @@
-name: PackPlugin
+name: Build extension
 on:
+    workflow_dispatch:
     push:
         branches:
-            - master
+            - main
 
 jobs:
     build:
-        uses: FriendsOfShopware/actions/.github/workflows/store.yml@main
+        uses: FriendsOfShopware/actions/.github/workflows/store-shopware-cli.yml@main
         with:
             extensionName: ${{ github.event.repository.name }}
-            shopwareVersion: '6.4.0'
         secrets:
             accountUser: ${{ secrets.ACCOUNT_USER }}
             accountPassword: ${{ secrets.ACCOUNT_PASSWORD }}
