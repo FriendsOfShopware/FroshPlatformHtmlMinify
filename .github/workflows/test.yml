@@ -1,50 +1,23 @@
 name: Test
 on:
-    schedule:
-        - cron: '30 */12 * * *'
     push:
         branches:
-            - master
-    pull_request_target:
-
-env:
-    SHOPWARE_CLI_VERSION: 0.1.28
+            - main
+    pull_request:
 
 jobs:
     test:
         runs-on: ubuntu-latest
-        container: ghcr.io/friendsofshopware/platform-plugin-dev:v6.4.10
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
 
-            -   name: Download shopware-cli
-                run: |
-                    git config --global --add safe.directory $(pwd)
-                    wget -q https://github.com/FriendsOfShopware/shopware-cli/releases/download/${SHOPWARE_CLI_VERSION}/shopware-cli_${SHOPWARE_CLI_VERSION}_Linux_x86_64.tar.gz
-                    tar -zxf shopware-cli_*.tar.gz shopware-cli
-                    mv shopware-cli /usr/bin/shopware-cli
-                    rm shopware-cli_*.tar.gz
+            - name: Install Shopware
+              run: |
+                  composer config minimum-stability RC
+                  composer update --prefer-stable
 
-            -   name: Build & test
-                run: |
-                    /usr/bin/shopware-cli extension prepare .
-                    ln -s "$(pwd)" "/plugins/FroshPlatformHtmlMinify"
-                    PROJECT_ROOT=/opt/shopware php -d pcov.enabled=1 -d pcov.directory=/opt/shopware \
-                        /opt/shopware/vendor/phpunit/phpunit/phpunit \
-                        --configuration /opt/shopware/custom/plugins/FroshPlatformHtmlMinify/phpunit.xml.dist \
-                        --log-junit build/artifacts/phpunit.junit.xml \
-                        --coverage-clover build/artifacts/phpunit.clover.xml \
-                        --coverage-html build/artifacts/phpunit-coverage-html
-
-#            -   name: Publish Test Results
-#                uses: EnricoMi/publish-unit-test-result-action@v1
-#                if: always()
-#                with:
-#                    files: "build/artifacts/phpunit.junit.xml"
-#
-#            -   name: Upload Artefact
-#                uses: actions/upload-artifact@v3
-#                with:
-#                    name: Test Results
-#                    path: build/artifacts/*
+            - name: Run PHPUnit
+              run: |
+                  wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
+                  php phpunit --bootstrap vendor/autoload.php

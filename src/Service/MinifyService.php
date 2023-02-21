@@ -2,7 +2,6 @@
 
 namespace Frosh\HtmlMinify\Service;
 
-use Composer\Autoload\ClassLoader;
 use JSMin\JSMin;
 use Shopware\Core\Framework\Adapter\Cache\CacheCompressor;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -44,25 +43,8 @@ class MinifyService
         return $content;
     }
 
-    private function resetClassLoader(): void
-    {
-        $file = __DIR__ . '/../../vendor/autoload.php';
-        if (!is_file($file)) {
-            return;
-        }
-
-        $classLoader = require_once $file;
-
-        if ($classLoader instanceof ClassLoader) {
-            $classLoader->unregister();
-            $classLoader->register(false);
-        }
-    }
-
     private function minifyJavascript(string $jsContent): string
     {
-        $this->resetClassLoader();
-
         return (new JSMin($jsContent))->min();
     }
 

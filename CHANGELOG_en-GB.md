@@ -1,3 +1,7 @@
+# 2.0.0
+
+* Shopware 6.5 compatibility
+
 # 1.0.5
 
 * Perf: Add cache for javascript minification
