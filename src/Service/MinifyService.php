@@ -4,6 +4,7 @@ namespace Frosh\HtmlMinify\Service;
 
 use JSMin\JSMin;
 use Shopware\Core\Framework\Adapter\Cache\CacheCompressor;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -13,20 +14,23 @@ class MinifyService
 
     private string $spacePlaceholder = '##SPACE##';
 
-    private AdapterInterface $cache;
-
-    public function __construct(AdapterInterface $cache)
-    {
-        $this->cache = $cache;
+    public function __construct(
+        private readonly AdapterInterface $cache,
+        private readonly SystemConfigService $systemConfigService
+    ) {
     }
 
     public function minify(string $content, ?ResponseHeaderBag $headerBag = null): string
     {
-        $startTime = microtime(true);
-        $lengthInitialContent = mb_strlen($content, 'utf8');
+        $shouldAddCompressionHeader = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.addCompressionHeader');
 
-        if ($lengthInitialContent === 0) {
-            return '';
+        if ($shouldAddCompressionHeader) {
+            $startTime = microtime(true);
+            $lengthInitialContent = mb_strlen($content, 'utf8');
+
+            if ($lengthInitialContent === 0) {
+                return '';
+            }
         }
 
         $this->minifySourceTypes($content);
@@ -38,7 +42,9 @@ class MinifyService
         //add the minified javascript after minifying html
         $content = str_replace($this->javascriptPlaceholder, '<script>' . $javascripts . '</script>', $content);
 
-        $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
+        if ($shouldAddCompressionHeader) {
+            $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
+        }
 
         return $content;
     }
@@ -101,7 +107,7 @@ class MinifyService
             ++$index;
             $content = trim($matches[1]);
 
-            if (!$this->str_ends_with($content, ';')) {
+            if (!\str_ends_with($content, ';')) {
                 $content .= ';';
             }
 
@@ -146,13 +152,6 @@ class MinifyService
         $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
         $timeTook = (int) ((microtime(true) - $startTime) * 1000);
 
-        if ($headerBag) {
-            $headerBag->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
-        }
-    }
-
-    private function str_ends_with(string $haystack, string $needle): bool
-    {
-        return $needle === '' || substr_compare($haystack, $needle, -\strlen($needle)) === 0;
+        $headerBag?->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
     }
 }

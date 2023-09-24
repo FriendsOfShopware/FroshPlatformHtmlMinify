@@ -13,6 +13,7 @@
 
         <service id="Frosh\HtmlMinify\Service\MinifyService">
             <argument type="service" id="cache.object"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
     </services>
 </container>

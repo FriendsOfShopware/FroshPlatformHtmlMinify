@@ -2,6 +2,7 @@
 
 use Frosh\HtmlMinify\Service\MinifyService;
 use PHPUnit\Framework\TestCase;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -11,14 +12,24 @@ class MinifyServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->minifyService = new MinifyService(new ArrayAdapter());
     }
 
     /**
      * @dataProvider provider
      */
-    public function testMinify($expectedContent, $content): void
+    public function testMinifyWithCompressionHeader($expectedContent, $content): void
     {
+        $systemConfigService = $this->createMock(SystemConfigService::class);
+        $systemConfigService->expects(self::once())
+            ->method('getBool')
+            ->with('FroshPlatformHtmlMinify.config.addCompressionHeader')
+            ->willReturn(true);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
         $headers = new ResponseHeaderBag();
 
         self::assertSame($expectedContent, $this->minifyService->minify($content, $headers));
@@ -32,6 +43,29 @@ class MinifyServiceTest extends TestCase
         self::assertSame($headerParts[2],(string) (float) $headerParts[2], 'The x-html-compressor-Header doesn\'t contain valid percentage');
         self::assertSame($headerParts[3],(string) (int) $headerParts[3], 'The x-html-compressor-Header doesn\'t contain valid runtime');
 
+    }
+
+    /**
+     * @dataProvider provider
+     */
+    public function testMinifyWithoutCompressionHeader($expectedContent, $content): void
+    {
+        $systemConfigService = $this->createMock(SystemConfigService::class);
+        $systemConfigService->expects(self::once())
+            ->method('getBool')
+            ->with('FroshPlatformHtmlMinify.config.addCompressionHeader')
+            ->willReturn(false);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
+        $headers = new ResponseHeaderBag();
+
+        self::assertSame($expectedContent, $this->minifyService->minify($content, $headers));
+
+        self::assertFalse($headers->has('x-html-compressor'));
     }
 
     public function provider(): array
