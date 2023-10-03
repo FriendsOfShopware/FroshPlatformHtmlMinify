@@ -1,3 +1,7 @@
+# 2.0.1
+
+* Feat: disable compressionHeader on default, add related configuration
+
 # 2.0.0
 
 * Shopware 6.5 compatibility
