@@ -1,3 +1,9 @@
+# 2.0.2
+
+* Perf: change comparison of string length to byte length for the compression header which is also faster
+* Perf: change internal cache key for JavaScript from sha1 to xxh128 hash
+* Feat: enable compressionHeader for fresh installations
+
 # 2.0.1
 
 * Feat: disable compressionHeader on default, add related configuration

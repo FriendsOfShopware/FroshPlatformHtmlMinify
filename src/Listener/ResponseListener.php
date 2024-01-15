@@ -10,14 +10,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class ResponseListener
 {
-    private string $environment;
-
-    private MinifyService $minifyService;
-
-    public function __construct(string $environment, MinifyService $minifyService)
-    {
-        $this->environment = $environment;
-        $this->minifyService = $minifyService;
+    public function __construct(
+        private readonly string $environment,
+        private readonly MinifyService $minifyService
+    ) {
     }
 
     public function onKernelResponse(ResponseEvent $event): void

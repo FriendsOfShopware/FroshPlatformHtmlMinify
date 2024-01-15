@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
 
     <card>
         <title>Configuration</title>
         <input-field type="bool">
             <name>addCompressionHeader</name>
-            <defaultValue>0</defaultValue>
-            <label>Add CompressionHeader to request</label>
+            <defaultValue>1</defaultValue>
+            <label>Add CompressionHeader to requests</label>
             <label lang="de-DE">Kompressionsheader bei den Anfragen hinzufügen</label>
-            <helpText>This will increase calculation power, so it should be added just for test purposes</helpText>
-            <helpText lang="de-DE">Dies erhöht den Rechenbedarf, sollte also nur zu Testzwecken aktiviert werden</helpText>
         </input-field>
     </card>
 </config>
