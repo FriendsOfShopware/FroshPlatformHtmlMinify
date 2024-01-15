@@ -26,7 +26,7 @@ class MinifyService
 
         if ($shouldAddCompressionHeader) {
             $startTime = microtime(true);
-            $lengthInitialContent = mb_strlen($content, 'utf8');
+            $lengthInitialContent = strlen($content);
 
             if ($lengthInitialContent === 0) {
                 return '';
@@ -143,7 +143,7 @@ class MinifyService
 
     private function assignCompressionHeader(?ResponseHeaderBag $headerBag, string $content, int $lengthInitialContent, float $startTime): void
     {
-        $lengthContent = mb_strlen($content, 'utf8');
+        $lengthContent = strlen($content);
 
         if ($lengthContent === 0) {
             return;
