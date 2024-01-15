@@ -107,7 +107,7 @@ class MinifyService
             ++$index;
             $content = trim($matches[1]);
 
-            if (!\str_ends_with($content, ';')) {
+            if (!str_ends_with($content, ';')) {
                 $content .= ';';
             }
 
@@ -116,7 +116,7 @@ class MinifyService
             return $index === 1 ? $placeholder : '';
         }, $content);
 
-        $cacheItem = $this->cache->getItem(sha1($jsContent));
+        $cacheItem = $this->cache->getItem(hash('xxh128', $jsContent));
 
         if ($cacheItem->isHit()) {
             return CacheCompressor::uncompress($cacheItem);
