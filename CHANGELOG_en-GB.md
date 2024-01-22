@@ -1,3 +1,7 @@
+# 2.0.3
+
+* Feat: add support for Shopware 6.6
+
 # 2.0.2
 
 * Perf: change comparison of string length to byte length for the compression header which is also faster
