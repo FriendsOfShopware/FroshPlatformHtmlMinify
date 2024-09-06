@@ -5,6 +5,18 @@
     <card>
         <title>Configuration</title>
         <input-field type="bool">
+            <name>minifyJavaScript</name>
+            <defaultValue>1</defaultValue>
+            <label>Combines and minify inline-JavaScript</label>
+            <label lang="de-DE">Kombiniert und verkleinert Inline-JavaScript</label>
+        </input-field>
+        <input-field type="bool">
+            <name>minifyHTML</name>
+            <defaultValue>1</defaultValue>
+            <label>Minify HTML</label>
+            <label lang="de-DE">HTML verkleinern</label>
+        </input-field>
+        <input-field type="bool">
             <name>addCompressionHeader</name>
             <defaultValue>1</defaultValue>
             <label>Add CompressionHeader to requests</label>

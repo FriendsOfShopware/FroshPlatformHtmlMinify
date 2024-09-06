@@ -35,12 +35,20 @@ class MinifyService
 
         $this->minifySourceTypes($content);
 
-        $javascripts = $this->extractCombinedInlineScripts($content);
+        $minifyJavaScript = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyJavaScript');
+        if ($minifyJavaScript) {
+            $javaScripts = $this->extractCombinedInlineScripts($content);
+        }
 
-        $this->minifyHtml($content);
+        $minifyHTML = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyHTML');
+        if ($minifyHTML) {
+            $this->minifyHtml($content);
+        }
 
-        //add the minified javascript after minifying html
-        $content = str_replace($this->javascriptPlaceholder, '<script>' . $javascripts . '</script>', $content);
+        if ($minifyJavaScript) {
+            //add the minified javascript after minifying html
+            $content = str_replace($this->javascriptPlaceholder, '<script>' . $javaScripts . '</script>', $content);
+        }
 
         if ($shouldAddCompressionHeader) {
             $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
