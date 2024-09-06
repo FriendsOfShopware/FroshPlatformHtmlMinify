@@ -1,3 +1,7 @@
+# 2.1.0
+
+* Feat: add dedicated options for javascript and html
+
 # 2.0.3
 
 * Feat: add support for Shopware 6.6
