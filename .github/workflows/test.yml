@@ -9,17 +9,56 @@ on:
 
 jobs:
     test:
+        env:
+            PLUGIN_NAME: FroshPlatformHtmlMinify
+        strategy:
+            fail-fast: false
+            matrix:
+                version: [
+                    "6.5.x",
+                    "trunk"
+                ]
+                php: [ "8.2" ]
+                include:
+                    -   version: "trunk"
+                        php: "8.3"
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+            -   name: Setup Shopware
+                uses: shopware/setup-shopware@main
+                with:
+                    shopware-version: ${{ matrix.version }}
+                    php-version: ${{ matrix.php }}
+                    php-extensions: pcov
+                    install: true
 
-            - name: Install Shopware
-              run: |
-                  composer config minimum-stability RC
-                  composer update --prefer-stable
+            -   name: Info
+                run: |
+                    php bin/console -V
+                    mysql -V
+                    php -v
 
-            - name: Run PHPUnit
-              run: |
-                  wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
-                  php phpunit --bootstrap vendor/autoload.php
+            -   name: Checkout
+                uses: actions/checkout@v3
+                with:
+                    path: ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}
+
+            -   name: PHPStan
+                working-directory: ${{ github.workspace }}
+                run: |
+                    composer require frosh/platform-html-minify
+                    ${{ github.workspace }}/vendor/bin/phpstan analyse -c ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}/phpstan.neon
+
+            -   name: Run Tests
+                working-directory: ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}
+                run: |
+                    php -d pcov.enabled=1 ${{ github.workspace }}/vendor/bin/phpunit --coverage-clover clover.xml --testsuite Unit
+
+            -   uses: codecov/codecov-action@v3
+                if: matrix.version == 'trunk' && matrix.php == '8.3'
+                env:
+                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                with:
+                    files: ./clover.xml
+                    root_dir: ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}
+                    working-directory: ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}

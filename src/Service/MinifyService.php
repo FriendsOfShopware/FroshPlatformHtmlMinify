@@ -35,12 +35,20 @@ class MinifyService
 
         $this->minifySourceTypes($content);
 
-        $javascripts = $this->extractCombinedInlineScripts($content);
+        $minifyJavaScript = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyJavaScript');
+        if ($minifyJavaScript) {
+            $javaScripts = $this->extractCombinedInlineScripts($content);
+        }
 
-        $this->minifyHtml($content);
+        $minifyHTML = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyHTML');
+        if ($minifyHTML) {
+            $this->minifyHtml($content);
+        }
 
-        //add the minified javascript after minifying html
-        $content = str_replace($this->javascriptPlaceholder, '<script>' . $javascripts . '</script>', $content);
+        if ($minifyJavaScript) {
+            //add the minified javascript after minifying html
+            $content = str_replace($this->javascriptPlaceholder, '<script>' . $javaScripts . '</script>', $content);
+        }
 
         if ($shouldAddCompressionHeader) {
             $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
@@ -90,7 +98,12 @@ class MinifyService
             ' ',
         ];
 
-        $content = trim(preg_replace($search, $replace, $content));
+        $replacedContent = preg_replace($search, $replace, $content);
+        if ($replacedContent === null) {
+            return;
+        }
+
+        $content = trim($replacedContent);
     }
 
     private function extractCombinedInlineScripts(string &$content): string
@@ -119,19 +132,23 @@ class MinifyService
         $cacheItem = $this->cache->getItem(hash('xxh128', $jsContent));
 
         if ($cacheItem->isHit()) {
-            return CacheCompressor::uncompress($cacheItem);
+            $uncompressedData = CacheCompressor::uncompress($cacheItem);
+
+            if (\is_string($uncompressedData)) {
+                return $uncompressedData;
+            }
         }
 
         $jsContent = $this->minifyJavascript($jsContent);
 
         $cacheItem = CacheCompressor::compress($cacheItem, $jsContent);
-        $cacheItem->expiresAfter(new \DateInterval('P1D'));
+        $cacheItem->expiresAfter(new \DateInterval('P7W'));
         $this->cache->save($cacheItem);
 
         return $jsContent;
     }
 
-    private function minifySourceTypes(&$content): void
+    private function minifySourceTypes(string &$content): void
     {
         $search = [
             '/ type=["\']text\/javascript["\']/',

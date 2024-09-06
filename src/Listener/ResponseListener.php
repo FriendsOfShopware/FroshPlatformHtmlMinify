@@ -37,11 +37,21 @@ class ResponseListener
             return;
         }
 
-        if (!str_contains($response->headers->get('Content-Type', ''), 'text/html')) {
+        $contentType = $response->headers->get('Content-Type', '');
+        if (empty($contentType)) {
             return;
         }
 
-        $result = $this->minifyService->minify($response->getContent(), $response->headers);
+        if (!str_contains($contentType, 'text/html')) {
+            return;
+        }
+
+        $content = $response->getContent();
+        if (empty($content)) {
+            return;
+        }
+
+        $result = $this->minifyService->minify($content, $response->headers);
 
         $response->setContent($result);
     }

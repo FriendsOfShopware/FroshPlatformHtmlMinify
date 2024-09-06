@@ -5,10 +5,24 @@
     <card>
         <title>Configuration</title>
         <input-field type="bool">
-            <name>addCompressionHeader</name>
+            <name>minifyJavaScript</name>
             <defaultValue>1</defaultValue>
-            <label>Add CompressionHeader to requests</label>
-            <label lang="de-DE">Kompressionsheader bei den Anfragen hinzufügen</label>
+            <label>Combine and minify Inline-JavaScript</label>
+            <label lang="de-DE">Kombiniere und verkleinere Inline-JavaScript</label>
+        </input-field>
+        <input-field type="bool">
+            <name>minifyHTML</name>
+            <defaultValue>1</defaultValue>
+            <label>Minify HTML</label>
+            <label lang="de-DE">HTML verkleinern</label>
+        </input-field>
+        <input-field type="bool">
+            <name>addCompressionHeader</name>
+            <defaultValue>0</defaultValue>
+            <label>Add CompressionHeader to requests (debug)</label>
+            <label lang="de-DE">Kompressionsheader bei den Anfragen hinzufügen (debug)</label>
+            <help-text>This slows down the output of HTML to the client, so it should only be enabled for debugging purposes.</help-text>
+            <help-text lang="de-DE">Dies verlangsamt die HTML-Ausgabe an den Client und sollte daher nur zu Debugging-Zwecken aktiviert werden.</help-text>
         </input-field>
     </card>
 </config>

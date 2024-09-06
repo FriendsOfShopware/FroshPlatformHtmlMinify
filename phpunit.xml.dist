@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-         executionOrder="random">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         cacheResult="false">
+
     <php>
         <ini name="error_reporting" value="-1"/>
-        <env name="APP_ENV" value="test"/>
+        <server name="KERNEL_CLASS" value="Shopware\Core\Kernel"/>
+        <server name="APP_ENV" value="test" force="true"/>
         <env name="APP_DEBUG" value="1"/>
+        <env name="APP_URL" value="http://localhost:8000"/>
         <env name="APP_SECRET" value="s$cretf0rt3st"/>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <env name="SHELL_VERBOSITY" value="-1"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
     <testsuites>
@@ -16,9 +22,9 @@
         </testsuite>
     </testsuites>
 
-    <coverage>
+    <source>
         <include>
-            <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">src</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>
