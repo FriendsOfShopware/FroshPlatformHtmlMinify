@@ -17,7 +17,70 @@ class MinifyServiceTest extends TestCase
     /**
      * @dataProvider minifyProvider
      */
-    public function testMinifyWithCompressionHeader($expectedContent, $content): void
+    public function testMinify(string $expected, string $source): void
+    {
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', true);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', true);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
+        $headers = new ResponseHeaderBag();
+        $result = $this->minifyService->minify($source, $headers);
+
+        self::assertFalse($headers->has('x-html-compressor'));
+
+        self::assertSame($expected, $result);
+    }
+
+    public function testMinifyJavaScriptWithoutHTML(): void
+    {
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', true);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', false);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
+        $source = '<html><div>   </div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
+        $expected = '<html><div>   </div><script>var a=1;var b=2;var c=1;var d=2;</script></html>';
+
+        $headers = new ResponseHeaderBag();
+        $result = $this->minifyService->minify($source, $headers);
+
+        self::assertFalse($headers->has('x-html-compressor'));
+
+        self::assertSame($expected, $result);
+    }
+
+    public function testMinifyHTMLWithoutJavaScript(): void
+    {
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', false);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', true);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
+        $source = '<html><div>   </div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
+        $expected = '<html><div></div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
+
+        $headers = new ResponseHeaderBag();
+        $result = $this->minifyService->minify($source, $headers);
+
+        self::assertFalse($headers->has('x-html-compressor'));
+
+        self::assertSame($expected, $result);
+    }
+
+    public function testMinifyWithCompressionHeader(): void
     {
         $systemConfigService = new StaticSystemConfigService();
         $systemConfigService->set('FroshPlatformHtmlMinify.config.addCompressionHeader', true);
@@ -31,7 +94,7 @@ class MinifyServiceTest extends TestCase
 
         $headers = new ResponseHeaderBag();
 
-        self::assertSame($expectedContent, $this->minifyService->minify($content, $headers));
+        $this->minifyService->minify('<html> </html>', $headers);
 
         self::assertTrue($headers->has('x-html-compressor'));
 
@@ -41,13 +104,9 @@ class MinifyServiceTest extends TestCase
         self::assertSame($headerParts[1],(string) (int) $headerParts[1], 'The x-html-compressor-Header doesn\'t contain valid timestamp');
         self::assertSame($headerParts[2],(string) (float) $headerParts[2], 'The x-html-compressor-Header doesn\'t contain valid percentage');
         self::assertSame($headerParts[3],(string) (int) $headerParts[3], 'The x-html-compressor-Header doesn\'t contain valid runtime');
-
     }
 
-    /**
-     * @dataProvider minifyProvider
-     */
-    public function testMinifyWithoutCompressionHeader($expectedContent, $content): void
+    public function testMinifyWithoutCompressionHeader(): void
     {
         $systemConfigService = new StaticSystemConfigService();
         $systemConfigService->set('FroshPlatformHtmlMinify.config.addCompressionHeader', false);
@@ -60,8 +119,7 @@ class MinifyServiceTest extends TestCase
         );
 
         $headers = new ResponseHeaderBag();
-
-        self::assertSame($expectedContent, $this->minifyService->minify($content, $headers));
+        $this->minifyService->minify('<html> </html>', $headers);
 
         self::assertFalse($headers->has('x-html-compressor'));
     }
