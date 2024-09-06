@@ -7,8 +7,8 @@
         <input-field type="bool">
             <name>minifyJavaScript</name>
             <defaultValue>1</defaultValue>
-            <label>Combines and minify inline-JavaScript</label>
-            <label lang="de-DE">Kombiniert und verkleinert Inline-JavaScript</label>
+            <label>Combine and minify inline-JavaScript</label>
+            <label lang="de-DE">Kombiniere und verkleinere Inline-JavaScript</label>
         </input-field>
         <input-field type="bool">
             <name>minifyHTML</name>
