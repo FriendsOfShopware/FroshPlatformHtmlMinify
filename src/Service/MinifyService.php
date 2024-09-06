@@ -98,7 +98,12 @@ class MinifyService
             ' ',
         ];
 
-        $content = trim(preg_replace($search, $replace, $content));
+        $replacedContent = preg_replace($search, $replace, $content);
+        if ($replacedContent === null) {
+            return;
+        }
+
+        $content = trim($replacedContent);
     }
 
     private function extractCombinedInlineScripts(string &$content): string
@@ -127,7 +132,11 @@ class MinifyService
         $cacheItem = $this->cache->getItem(hash('xxh128', $jsContent));
 
         if ($cacheItem->isHit()) {
-            return CacheCompressor::uncompress($cacheItem);
+            $uncompressedData = CacheCompressor::uncompress($cacheItem);
+
+            if (\is_string($uncompressedData)) {
+                return $uncompressedData;
+            }
         }
 
         $jsContent = $this->minifyJavascript($jsContent);
@@ -139,7 +148,7 @@ class MinifyService
         return $jsContent;
     }
 
-    private function minifySourceTypes(&$content): void
+    private function minifySourceTypes(string &$content): void
     {
         $search = [
             '/ type=["\']text\/javascript["\']/',

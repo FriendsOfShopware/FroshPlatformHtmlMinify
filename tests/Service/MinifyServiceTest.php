@@ -2,7 +2,7 @@
 
 use Frosh\HtmlMinify\Service\MinifyService;
 use PHPUnit\Framework\TestCase;
-use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Shopware\Core\Test\Stub\SystemConfigService\StaticSystemConfigService;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -15,15 +15,14 @@ class MinifyServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider provider
+     * @dataProvider minifyProvider
      */
     public function testMinifyWithCompressionHeader($expectedContent, $content): void
     {
-        $systemConfigService = $this->createMock(SystemConfigService::class);
-        $systemConfigService->expects(self::once())
-            ->method('getBool')
-            ->with('FroshPlatformHtmlMinify.config.addCompressionHeader')
-            ->willReturn(true);
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.addCompressionHeader', true);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', true);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', true);
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
@@ -46,15 +45,14 @@ class MinifyServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider provider
+     * @dataProvider minifyProvider
      */
     public function testMinifyWithoutCompressionHeader($expectedContent, $content): void
     {
-        $systemConfigService = $this->createMock(SystemConfigService::class);
-        $systemConfigService->expects(self::once())
-            ->method('getBool')
-            ->with('FroshPlatformHtmlMinify.config.addCompressionHeader')
-            ->willReturn(false);
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.addCompressionHeader', false);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', true);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', true);
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
@@ -68,7 +66,7 @@ class MinifyServiceTest extends TestCase
         self::assertFalse($headers->has('x-html-compressor'));
     }
 
-    public function provider(): array
+    public static function minifyProvider(): array
     {
         $cases = [];
 
