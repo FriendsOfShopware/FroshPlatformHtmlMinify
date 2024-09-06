@@ -142,7 +142,7 @@ class MinifyService
         $jsContent = $this->minifyJavascript($jsContent);
 
         $cacheItem = CacheCompressor::compress($cacheItem, $jsContent);
-        $cacheItem->expiresAfter(new \DateInterval('P1D'));
+        $cacheItem->expiresAfter(new \DateInterval('P7W'));
         $this->cache->save($cacheItem);
 
         return $jsContent;
