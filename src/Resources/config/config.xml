@@ -18,7 +18,7 @@
         </input-field>
         <input-field type="bool">
             <name>addCompressionHeader</name>
-            <defaultValue>1</defaultValue>
+            <defaultValue>0</defaultValue>
             <label>Add CompressionHeader to requests</label>
             <label lang="de-DE">Kompressionsheader bei den Anfragen hinzufügen</label>
         </input-field>
