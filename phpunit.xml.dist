@@ -17,7 +17,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="FroshPlatformHtmlMinify Testsuite">
+        <testsuite name="Unit">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
