@@ -8,26 +8,41 @@ on:
         - cron: '15 11 * * *'
 
 jobs:
+    get-matrix:
+        runs-on: ubuntu-latest
+        outputs:
+            matrix: ${{ steps.matrix.outputs.matrix }}
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Get Shopware Version
+                id: shopware-constraint
+                run: echo "shopware_constraint=$(cat composer.json | jq -r '.require."shopware/core"')" >> $GITHUB_OUTPUT
+
+            -   name: Get Shopware Matrix
+                uses: tinect/github-shopware-matrix-generator@main
+                id: matrix
+                with:
+                    versionConstraint: ${{ steps.shopware-constraint.outputs.shopware_constraint }}
+                    allowEol: false
+                    justMinMaxShopware: false
+                    allowShopwareNext: true
+                    allowShopwareRC: false
+                    includePhpVersion: true
     test:
         env:
             PLUGIN_NAME: FroshPlatformHtmlMinify
+        needs: get-matrix
         strategy:
             fail-fast: false
-            matrix:
-                version: [
-                    "6.5.x",
-                    "trunk"
-                ]
-                php: [ "8.2" ]
-                include:
-                    -   version: "trunk"
-                        php: "8.3"
+            matrix: ${{ fromJson(needs.get-matrix.outputs.matrix) }}
         runs-on: ubuntu-latest
         steps:
             -   name: Setup Shopware
                 uses: shopware/setup-shopware@main
                 with:
-                    shopware-version: ${{ matrix.version }}
+                    shopware-version: ${{ matrix.shopware }}
                     php-version: ${{ matrix.php }}
                     php-extensions: pcov
                     install: true
@@ -55,7 +70,7 @@ jobs:
                     php -d pcov.enabled=1 ${{ github.workspace }}/vendor/bin/phpunit --coverage-clover clover.xml --testsuite Unit
 
             -   uses: codecov/codecov-action@v3
-                if: matrix.version == 'trunk' && matrix.php == '8.3'
+                if: matrix.shopware == 'trunk'
                 env:
                     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
                 with:
