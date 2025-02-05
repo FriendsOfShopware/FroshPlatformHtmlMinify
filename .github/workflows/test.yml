@@ -28,7 +28,7 @@ jobs:
                     allowEol: false
                     justMinMaxShopware: false
                     allowShopwareNext: true
-                    allowShopwareRC: false
+                    allowShopwareRC: true
                     includePhpVersion: true
     test:
         env:
