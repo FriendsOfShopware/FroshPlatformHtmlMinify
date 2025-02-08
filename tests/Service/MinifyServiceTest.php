@@ -80,6 +80,28 @@ class MinifyServiceTest extends TestCase
         self::assertSame($expected, $result);
     }
 
+    public function testMinifyHTMLWithoutJavaScriptNotCompressingWithinJavaScript(): void
+    {
+        $systemConfigService = new StaticSystemConfigService();
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyJavaScript', false);
+        $systemConfigService->set('FroshPlatformHtmlMinify.config.minifyHTML', true);
+
+        $this->minifyService = new MinifyService(
+            new ArrayAdapter(),
+            $systemConfigService
+        );
+
+        $source = '<html><div>   </div><script>var a = 1; ' . PHP_EOL . 'var b = 2;</script></html>';
+        $expected = '<html><div></div><script>var a = 1; ' . PHP_EOL . 'var b = 2;' . PHP_EOL . '</script></html>';
+
+        $headers = new ResponseHeaderBag();
+        $result = $this->minifyService->minify($source, $headers);
+
+        self::assertFalse($headers->has('x-html-compressor'));
+
+        self::assertSame($expected, $result);
+    }
+
     public function testMinifyWithCompressionHeader(): void
     {
         $systemConfigService = new StaticSystemConfigService();
