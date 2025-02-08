@@ -1,0 +1,28 @@
+store:
+    availabilities:
+        - German
+        - International
+    default_locale: en_GB
+    localizations:
+        - de_DE
+        - en_GB
+    categories:
+        - ConversionOptimierung
+    type: extension
+    icon: src/Resources/store/icon.png
+    tags:
+        de:
+            - traffic
+            - minify
+            - performance
+        en:
+            - traffic
+            - minify
+            - performance
+    faq:
+        de:
+            - question: Storefront funktioniert nicht nach der Aktivierung, was kann ich tun?
+              answer: Prüfe das JavaScript. In der Regel sind es JavaScript-Fehler, die durch das Verkleinern erst auftreten. Fehlende Semikolons oder falsche Syntax sind häufige Fehlerquellen.
+        en:
+            - question: Storefront does not work after activation, what can I do?
+              answer: Check the JavaScript. In general, it is JavaScript errors that only occur after minification. Missing semicolons or incorrect syntax are common sources of errors.
