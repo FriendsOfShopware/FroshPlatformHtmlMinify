@@ -70,7 +70,7 @@ class MinifyServiceTest extends TestCase
         );
 
         $source = '<html><div>   </div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
-        $expected = '<html><div></div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
+        $expected = '<html><div></div><script>var a = 1; var b = 2;' . PHP_EOL . 'var c = 1; var d = 2;' . PHP_EOL . '</script></html>';
 
         $headers = new ResponseHeaderBag();
         $result = $this->minifyService->minify($source, $headers);
