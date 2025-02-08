@@ -1,3 +1,8 @@
+# 2.2.0
+
+* Feat: always combine inline JavaScript, but suppress its minification if config is disabled
+* Feat: mark support for Shopware 6.7
+
 # 2.1.0
 
 * Feat: add dedicated options for javascript and html

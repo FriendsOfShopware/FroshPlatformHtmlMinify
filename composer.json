@@ -7,7 +7,7 @@
     "minify"
   ],
   "description": "This plugin delivers minified HTML and minified inline JavaScript to visitors.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "shopware-platform-plugin",
   "license": "mit",
   "authors": [
