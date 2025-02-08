@@ -27,28 +27,20 @@ class MinifyService
         if ($shouldAddCompressionHeader) {
             $startTime = microtime(true);
             $lengthInitialContent = strlen($content);
-
-            if ($lengthInitialContent === 0) {
-                return '';
-            }
         }
 
         $this->minifySourceTypes($content);
 
         $minifyJavaScript = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyJavaScript');
-        if ($minifyJavaScript) {
-            $javaScripts = $this->extractCombinedInlineScripts($content);
-        }
+        $javaScripts = $this->extractCombinedInlineScripts($content, $minifyJavaScript);
 
         $minifyHTML = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyHTML');
         if ($minifyHTML) {
             $this->minifyHtml($content);
         }
 
-        if ($minifyJavaScript) {
-            //add the minified javascript after minifying html
-            $content = str_replace($this->javascriptPlaceholder, '<script>' . $javaScripts . '</script>', $content);
-        }
+        //add the javascript after minifying html
+        $content = str_replace($this->javascriptPlaceholder, '<script>' . $javaScripts . '</script>', $content);
 
         if ($shouldAddCompressionHeader) {
             $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
@@ -106,7 +98,7 @@ class MinifyService
         $content = trim($replacedContent);
     }
 
-    private function extractCombinedInlineScripts(string &$content): string
+    private function extractCombinedInlineScripts(string &$content, bool $minifyJavaScript): string
     {
         if (str_contains($content, '</script>') === false) {
             return '';
@@ -128,6 +120,10 @@ class MinifyService
 
             return $index === 1 ? $placeholder : '';
         }, $content);
+
+        if (!$minifyJavaScript) {
+            return $jsContent;
+        }
 
         $cacheItem = $this->cache->getItem(hash('xxh128', $jsContent));
 

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
-
     <card>
         <title>Configuration</title>
         <input-field type="bool">
             <name>minifyJavaScript</name>
             <defaultValue>1</defaultValue>
-            <label>Combine and minify Inline-JavaScript</label>
-            <label lang="de-DE">Kombiniere und verkleinere Inline-JavaScript</label>
+            <label>Minify Inline-JavaScript</label>
+            <label lang="de-DE">Verkleinere Inline-JavaScript</label>
+            <help-text>JavaScript is getting combined always. This option will compress it additionally.</help-text>
+            <help-text lang="de-DE">JavaScript wird immer kombiniert. Diese Option komprimiert es zusätzlich.</help-text>
         </input-field>
         <input-field type="bool">
             <name>minifyHTML</name>
