@@ -29,10 +29,10 @@ class MinifyService
             $lengthInitialContent = strlen($content);
         }
 
-        $this->minifySourceTypes($content);
+        $content = $this->minifySourceTypes($content);
 
         $minifyJavaScript = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyJavaScript');
-        $javaScripts = $this->extractCombinedInlineScripts($content, $minifyJavaScript);
+        [$content, $javaScripts] = $this->extractCombinedInlineScripts($content, $minifyJavaScript);
 
         $minifyHTML = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.minifyHTML');
         if ($minifyHTML) {
@@ -98,17 +98,20 @@ class MinifyService
         $content = trim($replacedContent);
     }
 
-    private function extractCombinedInlineScripts(string &$content, bool $minifyJavaScript): string
+    /**
+     * @return string[]
+     */
+    private function extractCombinedInlineScripts(string $content, bool $minifyJavaScript): array
     {
         if (str_contains($content, '</script>') === false) {
-            return '';
+            return [$content, ''];
         }
 
         $jsContent = '';
         $index = 0;
         $placeholder = $this->javascriptPlaceholder;
 
-        $content = preg_replace_callback('#<script>(.*?)</script>#s', function ($matches) use (&$jsContent, &$index, $placeholder) {
+        $replacedContent = preg_replace_callback('#<script>(.*?)</script>#s', function ($matches) use ($minifyJavaScript, &$jsContent, &$index, $placeholder) {
             ++$index;
             $content = trim($matches[1]);
 
@@ -116,16 +119,25 @@ class MinifyService
                 $content .= ';';
             }
 
-            $jsContent .= $content . \PHP_EOL;
+            $jsContent .= $this->getHandledScript($content . \PHP_EOL, $minifyJavaScript);
 
             return $index === 1 ? $placeholder : '';
         }, $content);
 
+        if (\is_string($replacedContent)) {
+            $content = $replacedContent;
+        }
+
+        return [$content, $jsContent];
+    }
+
+    private function getHandledScript(string $jsContent, bool $minifyJavaScript): string
+    {
         if (!$minifyJavaScript) {
             return $jsContent;
         }
 
-        $cacheItem = $this->cache->getItem(hash('xxh128', $jsContent));
+        $cacheItem = $this->cache->getItem('matomo-js-cache-' . hash('xxh128', $jsContent));
 
         if ($cacheItem->isHit()) {
             $uncompressedData = CacheCompressor::uncompress($cacheItem);
@@ -144,14 +156,20 @@ class MinifyService
         return $jsContent;
     }
 
-    private function minifySourceTypes(string &$content): void
+    private function minifySourceTypes(string $content): string
     {
         $search = [
             '/ type=["\']text\/javascript["\']/',
             '/ type=["\']text\/css["\']/',
         ];
         $replace = '';
-        $content = preg_replace($search, $replace, $content);
+        $replacedContent = preg_replace($search, $replace, $content);
+
+        if (\is_string($replacedContent)) {
+            return $replacedContent;
+        }
+
+        return $content;
     }
 
     private function assignCompressionHeader(?ResponseHeaderBag $headerBag, string $content, int $lengthInitialContent, float $startTime): void
