@@ -68,7 +68,7 @@ jobs:
                 working-directory: ${{ github.workspace }}/custom/plugins/${{ env.PLUGIN_NAME }}
                 run: |
                     mkdir .phpunit.cache
-                    php -d pcov.enabled=1 ${{ github.workspace }}/vendor/bin/phpunit --coverage-clover clover.xml --testsuite Unit --cache-result .phpunit.cache --do-not-cache-result
+                    php -d pcov.enabled=1 ${{ github.workspace }}/vendor/bin/phpunit --coverage-clover clover.xml --testsuite Unit
 
             -   uses: codecov/codecov-action@v3
                 if: matrix.shopware == 'trunk'
