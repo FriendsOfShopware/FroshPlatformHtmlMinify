@@ -38,7 +38,7 @@ class ResponseListener
         }
 
         $contentType = $response->headers->get('Content-Type', '');
-        if (empty($contentType)) {
+        if ($contentType === null || $contentType === '') {
             return;
         }
 
@@ -47,7 +47,7 @@ class ResponseListener
         }
 
         $content = $response->getContent();
-        if (empty($content)) {
+        if ($content === false || $content === '') {
             return;
         }
 
