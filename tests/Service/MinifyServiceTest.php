@@ -1,5 +1,6 @@
 <?php
 
+use Frosh\HtmlMinify\Service\CompressionTrackingService;
 use Frosh\HtmlMinify\Service\MinifyService;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Test\Stub\SystemConfigService\StaticSystemConfigService;
@@ -25,7 +26,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $headers = new ResponseHeaderBag();
@@ -44,7 +46,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $source = '<html><div>   </div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
@@ -66,7 +69,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $source = '<html><div>   </div><script>var a = 1; var b = 2;</script><script>var c = 1; var d = 2;</script></html>';
@@ -88,7 +92,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $source = '<html><div>   </div><script>var a = 1; ' . PHP_EOL . 'var b = 2;</script></html>';
@@ -111,7 +116,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $headers = new ResponseHeaderBag();
@@ -137,7 +143,8 @@ class MinifyServiceTest extends TestCase
 
         $this->minifyService = new MinifyService(
             new ArrayAdapter(),
-            $systemConfigService
+            $systemConfigService,
+            new CompressionTrackingService($systemConfigService)
         );
 
         $headers = new ResponseHeaderBag();
