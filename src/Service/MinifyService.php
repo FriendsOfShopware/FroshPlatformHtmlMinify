@@ -16,18 +16,14 @@ class MinifyService
 
     public function __construct(
         private readonly AdapterInterface $cache,
-        private readonly SystemConfigService $systemConfigService
+        private readonly SystemConfigService $systemConfigService,
+        private readonly CompressionTrackingService $compressionTrackingService
     ) {
     }
 
     public function minify(string $content, ?ResponseHeaderBag $headerBag = null): string
     {
-        $shouldAddCompressionHeader = $this->systemConfigService->getBool('FroshPlatformHtmlMinify.config.addCompressionHeader');
-
-        if ($shouldAddCompressionHeader) {
-            $startTime = microtime(true);
-            $lengthInitialContent = strlen($content);
-        }
+        $this->compressionTrackingService->start($content);
 
         $content = $this->minifySourceTypes($content);
 
@@ -42,9 +38,7 @@ class MinifyService
         //add the javascript after minifying html
         $content = str_replace($this->javascriptPlaceholder, '<script>' . $javaScripts . '</script>', $content);
 
-        if ($shouldAddCompressionHeader) {
-            $this->assignCompressionHeader($headerBag, $content, $lengthInitialContent, $startTime);
-        }
+        $this->compressionTrackingService->end($headerBag, $content);
 
         return $content;
     }
@@ -170,19 +164,5 @@ class MinifyService
         }
 
         return $content;
-    }
-
-    private function assignCompressionHeader(?ResponseHeaderBag $headerBag, string $content, int $lengthInitialContent, float $startTime): void
-    {
-        $lengthContent = strlen($content);
-
-        if ($lengthContent === 0) {
-            return;
-        }
-
-        $savedData = round(100 - 100 / ($lengthInitialContent / $lengthContent), 2);
-        $timeTook = (int) ((microtime(true) - $startTime) * 1000);
-
-        $headerBag?->add(['X-Html-Compressor' => time() . ': ' . $savedData . '% ' . $timeTook . 'ms']);
     }
 }
