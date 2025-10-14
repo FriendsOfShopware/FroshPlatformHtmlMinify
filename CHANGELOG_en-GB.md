@@ -1,3 +1,8 @@
+# 2.3.0
+
+* Feat: change caching of minified JavaScript per script-Tag to optimize cache hit
+* Feat: add CompressionTrackingService to keep track of performance of minification
+
 # 2.2.0
 
 * Feat: always combine inline JavaScript, but suppress its minification if config is disabled
