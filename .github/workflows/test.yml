@@ -45,6 +45,7 @@ jobs:
                     shopware-version: ${{ matrix.shopware }}
                     php-version: ${{ matrix.php }}
                     install: true
+                    allow-insecure-versions: true
 
             -   name: Info
                 run: |
