@@ -6,6 +6,10 @@ This plugin delivers minified HTML and minified inline JavaScript to visitors.
 In tests this results in up to 50% smaller contents, with enabled compression up to 30%.  
 You can track the compression in Devtools by viewing the header `X-Html-Compressor`.
 
+## Warning
+
+This extension optimizes load oder of scripts. If you insert custom scripts into you side for example tracking codes, they might break and need adapation.
+
 ## Download
 
 ### Composer from [packagist.org](https://packagist.org/packages/frosh/platform-html-minify)
