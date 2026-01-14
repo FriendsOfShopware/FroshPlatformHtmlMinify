@@ -8,7 +8,7 @@ You can track the compression in Devtools by viewing the header `X-Html-Compress
 
 ## Warning
 
-This extension optimizes load oder of scripts. If you insert custom scripts into you side for example tracking codes, they might break and need adapation.
+This extension optimizes the loading sequence of scripts. If you or a plugin inserts custom scripts into the website, such as tracking codes, these can become faulty and need to be adjusted. This might be solvable by using default ready state events in JavaScript.
 
 ## Download
 
