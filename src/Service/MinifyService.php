@@ -131,7 +131,7 @@ class MinifyService
             return $jsContent;
         }
 
-        $cacheItem = $this->cache->getItem('matomo-js-cache-' . hash('xxh128', $jsContent));
+        $cacheItem = $this->cache->getItem('frosh-html-minify-cache-' . hash('xxh128', $jsContent));
 
         if ($cacheItem->isHit()) {
             $uncompressedData = CacheCompressor::uncompress($cacheItem);
