@@ -23,6 +23,12 @@ store:
         de:
             - question: Storefront funktioniert nicht nach der Aktivierung, was kann ich tun?
               answer: Prüfe das JavaScript. In der Regel sind es JavaScript-Fehler, die durch das Verkleinern erst auftreten. Fehlende Semikolons oder falsche Syntax sind häufige Fehlerquellen.
+            - question: Lohnt sich das Plugin bei einem hohen TTFB?
+              answer: Nein. Wenn dein Shop bereits einen hohen TTFB (Time To First Byte) hat, lohnt sich dieses Plugin nicht. Es löst einen hohen TTFB nicht und die Minimierung benötigt obendrein etwas zusätzliche Verarbeitungszeit. Die Ursache des hohen TTFB zu beheben bringt deutlich mehr als das Minimieren des HTML.
         en:
             - question: Storefront does not work after activation, what can I do?
               answer: Check the JavaScript. In general, it is JavaScript errors that only occur after minification. Missing semicolons or incorrect syntax are common sources of errors.
+            - question: Is the plugin worth using with a high TTFB?
+              answer: No. If your shop already has a high TTFB (Time To First Byte), this plugin is not worth using. It will not solve a high TTFB, and the minification itself adds a little processing time on top. Fixing the root cause of your high TTFB brings far more benefit than minifying the HTML.
+changelog:
+    enabled: true
