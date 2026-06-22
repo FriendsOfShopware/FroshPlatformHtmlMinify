@@ -10,6 +10,8 @@ You can track the compression in Devtools by viewing the header `X-Html-Compress
 
 This extension optimizes the loading sequence of scripts. If you or a plugin inserts custom scripts into the website, such as tracking codes, these can become faulty and need to be adjusted. This might be solvable by using default ready state events in JavaScript.
 
+If your shop already has a high TTFB (Time To First Byte), this plugin is not worth using. It will not solve a high TTFB, and the minification itself adds a little processing time on top. Fixing the root cause of your high TTFB brings far more benefit than minifying the HTML.
+
 ## Download
 
 ### Composer from [packagist.org](https://packagist.org/packages/frosh/platform-html-minify)
