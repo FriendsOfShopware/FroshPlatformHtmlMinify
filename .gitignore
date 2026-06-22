@@ -1,4 +1,0 @@
-vendor
-phpstan.neon
-.phpunit.result.cache
-composer.lock
