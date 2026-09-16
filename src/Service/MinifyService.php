@@ -52,7 +52,7 @@ class MinifyService
     {
         $search = [
             '/(\n|^)(\x20+|\t)/',
-            '/(\n|^)\/\/(.*?)(\n|$)/',
+            '/(\n|^)\/\/(.*?)(?=\n|$)/',
             '/\n/',
             '/\<\!--.*?-->/',
             '/(\x20+|\t)/', // Delete multispace (Without \n)

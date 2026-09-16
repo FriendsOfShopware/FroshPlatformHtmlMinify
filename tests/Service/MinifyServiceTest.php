@@ -170,7 +170,7 @@ class MinifyServiceTest extends TestCase
             ];
         }
 
-        self::assertCount(4, $cases);
+        self::assertCount(5, $cases);
 
         return $cases;
     }
